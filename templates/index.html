@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CARL AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+
+<body class="{% if dark_mode %}dark-mode{% endif %}">
+  <div class="container">
+    <!-- Sidebar-->
+    <div class="sidebar">
+      <button class="close-sidebar">✕</button>
+      <h2>GenAI Chatbot</h2>
+      <ul class="sidebar-menu">
+        <li><button class="nav-btn" onclick="goToPage('/')">New Chat</button></li>
+        <li><button class="nav-btn" onclick="goToPage('/extensions')">Extensions</button></li>
+        <li><button class="nav-btn" onclick="goToPage('/history')">History</button></li>
+      </ul>
+
+      <ul class="sidebar-settings">
+        <li><button class="nav-btn" onclick="goToPage('/settings')">Settings</button></li>
+      </ul>
+    </div>
+
+    <!-- Main Chat Interface -->
+    <div class="main">
+      <div class="chat-header">
+        <button class="hamburger">☰</button>
+        <header>
+          <h1>CARL AI</h1>
+          <button class="new-chat-btn" onclick="goToPage('/')"><img src="{{ url_for('static', filename='images/new-chat-1.png') }}" alt="New Chat"></button>
+        </header>
+      </div>
+      <div class="chat-box" id="chat-box">
+        <!-- Messages will appear here -->
+      </div>
+      <div class="input-area">
+        <div class="input-wrapper">
+          <textarea id="user-input" placeholder="Type your message..." rows="1"></textarea>
+          <button class="send-button" onclick="sendMessage()"><img src="{{ url_for('static', filename='images/send-button.png') }}" alt="New Chat"></button>
+        </div>
+        <!-- Web Search Button Container -->
+        <div id="web-search-container" style="display: inline-block; position: relative;">
+          <button id="web-search-btn" onclick="enableWebSearch()" class="web-search-btn">
+            Web Search
+
+            <span id="cancel-search" onclick="disableWebSearch(event)" class="cancel-cross"
+              style="display: none;">✖</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    let webSearchFlag = false;
+
+    function enableWebSearch() {
+      webSearchFlag = true;
+
+      // Add active class to change button color
+      const btn = document.getElementById("web-search-btn");
+      btn.classList.add("active");
+
+      // Show the cancel cross
+      document.getElementById("cancel-search").style.display = "inline";
+    }
+
+    function disableWebSearch(event) {
+      event.stopPropagation(); // stop click from triggering enableWebSearch
+      webSearchFlag = false;
+
+      const btn = document.getElementById("web-search-btn");
+      btn.classList.remove("active");
+
+      document.getElementById("cancel-search").style.display = "none";
+    }
+
+    const session_id = "{{session_id}}";
+    function goToPage(route) {
+      window.location.href = route;
+    }
+
+    // Typing animation with Markdown
+    function typeMarkdownText(element, markdownText, delay = 20) {
+      const words = markdownText.split(" ");
+      let current = "";
+      const chatBox = document.getElementById("chat-box"); // reference here
+
+      function type() {
+        if (words.length > 0) {
+          current += words.shift() + " ";
+          element.innerHTML = marked.parse(current);
+          chatBox.scrollTop = chatBox.scrollHeight; // scroll as new content appears
+          setTimeout(type, delay);
+        }
+      }
+
+      type();
+    }
+
+    // Send a message to the server and receive a response
+    async function sendMessage() {
+      const input = document.getElementById("user-input");
+      const chatBox = document.getElementById("chat-box");
+      const message = input.value.trim();
+      if (!message) return;
+
+      // Add user's message
+      const userMessage = document.createElement("div");
+      userMessage.className = "chat-message user";
+      userMessage.innerText = message;
+      chatBox.appendChild(userMessage);
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      input.value = "";
+
+      // Create placeholder for bot message
+      const botMessage = document.createElement("div");
+      botMessage.className = "chat-message bot";
+      chatBox.appendChild(botMessage);
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      try {
+        const res = await fetch("/send_message", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: message,
+            webSearchFlag: webSearchFlag,
+            session_id: session_id
+          })
+        });
+
+        const data = await res.json();
+
+        // Animate the markdown response
+        typeMarkdownText(botMessage, data.reply);
+
+      } catch (error) {
+        botMessage.innerText = "⚠️ Error getting response from server.";
+        console.error("Error in sendMessage:", error);
+      }
+    }
+
+    // Hamburger menu
+    document.querySelector('.hamburger').addEventListener('click', () => {
+      document.querySelector('.sidebar').classList.toggle('active');
+    });
+
+    // Close sidebar when clicking outside
+    document.querySelector('.close-sidebar').addEventListener('click', () => {
+      document.querySelector('.sidebar').classList.remove('active');
+    });
+
+    // Load previous messages when the page is loaded.
+    window.addEventListener("DOMContentLoaded", async () => {
+      if (session_id) {
+        const chatBox = document.getElementById("chat-box");
+        try {
+          const res = await fetch(`/get_previous_messages/${session_id}`);
+          const messages = await res.json();
+
+          messages.forEach(msg => {
+            if (!msg.type) return; // Skip items like chat_name
+            const msgDiv = document.createElement("div");
+            msgDiv.className = `chat-message ${msg.type === "human" ? "user" : "bot"}`;
+            if (msg.type === "ai") {
+              msgDiv.innerHTML = marked.parse(msg.content);
+            } else {
+              msgDiv.innerText = msg.content;
+            }
+            chatBox.appendChild(msgDiv);
+          });
+
+          chatBox.scrollTop = chatBox.scrollHeight;
+        } catch (err) {
+          console.error("Failed to load chat history", err);
+        }
+      }
+    });
+
+    // Auto-scroll the textarea
+    const textarea = document.getElementById('user-input');
+
+    textarea.addEventListener('input', () => {
+      textarea.style.height = 'auto';
+      textarea.style.height = textarea.scrollHeight + 'px';
+    });
+
+
+    const chatBox = document.getElementById('chat-box');
+    const inputArea = document.querySelector('.input-area');
+
+    function syncChatPadding() {
+      // Add small buffer so last message isn't glued to the input
+      const h = inputArea.offsetHeight || 0;
+      chatBox.style.paddingBottom = (h + 20) + 'px';
+    }
+
+    // Clamp textarea height and allow internal scroll
+    textarea.addEventListener('input', () => {
+      textarea.style.height = 'auto';
+      const max = 150;
+      const next = Math.min(textarea.scrollHeight, max);
+      textarea.style.height = next + 'px';
+      textarea.style.overflowY = textarea.scrollHeight > max ? 'auto' : 'hidden';
+      syncChatPadding();
+    });
+
+    // After sending, collapse to one line
+    const _origSend = sendMessage;
+    sendMessage = async function () {
+      await _origSend();
+      textarea.value = '';
+      textarea.style.height = '40px';
+      textarea.style.overflowY = 'hidden';
+      syncChatPadding();
+    }
+
+    window.addEventListener('resize', syncChatPadding);
+    window.addEventListener('DOMContentLoaded', syncChatPadding);
+
+    document.getElementById("user-input").addEventListener("keydown", e => {
+      if (e.key === "Enter") sendMessage();
+    });
+
+  </script>
+
+</body>
+
+</html>

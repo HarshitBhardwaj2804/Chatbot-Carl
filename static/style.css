@@ -1,0 +1,514 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Base Styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f1f5f9;
+  height: 100vh;
+  display: flex;
+  transition: background 0.3s, color 0.3s;
+  overflow-x: hidden; /* Prevent horizontal scroll when sidebar is hidden */
+}
+
+.container {
+  display: flex;
+  width: 100%;
+  position: relative;
+  transition: transform 0.3s ease; /* Smooth transition for sidebar toggle */
+}
+
+.sidebar {
+    width: 225px; /* Slightly wider for better spacing */
+    background-color: #1e293b; /* Dark, professional background */
+    color: #e2e8f0; /* Light text for contrast */
+    padding: 20px;
+    box-shadow: 6px 0 15px rgba(0, 0, 0, 0.1); /* Softer, modern shadow */
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column; /* Use flexbox to manage layout */
+    justify-content: space-between; /* Pushes settings to the bottom */
+    transition: transform 0.3s ease;
+    z-index: 1000;
+}
+
+.sidebar h2 {
+    font-size: 24px;
+    margin-bottom: 40px;
+    text-align: left;
+    color: #f8fafc;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+/* Navigation Lists */
+.sidebar .sidebar-menu,
+.sidebar .sidebar-settings {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Consistent spacing between items */
+}
+
+/* Individual List Item - Container for the button */
+.sidebar .sidebar-menu li,
+.sidebar .sidebar-settings li {
+    background: transparent;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.sidebar .sidebar-menu li:hover,
+.sidebar .sidebar-settings li:hover {
+    background-color: #334155; /* Subtle hover effect */
+}
+
+/* Navigation Button - The actual clickable element */
+.nav-btn {
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: left;
+    padding: 12px 20px;
+    width: 100%;
+    transition: color 0.3s ease;
+    border-radius: 30px; /* Pill shape */
+}
+
+.sidebar .sidebar-settings {
+    margin-top: auto; /* Pushes the settings list to the bottom of the flex container */
+    padding-top: 20px;
+}
+
+/* Close button for mobile sidebar */
+.close-sidebar {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #94a3b8;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+/* Main Chat Area */
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #f1f5f9;
+    margin-left: 225px; /* Matches sidebar width */
+    transition: margin-left 0.3s ease;
+}
+
+/* Header */
+.chat-header {
+    padding: 15px 30px;
+    background-color: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center everything in the header */
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    position: relative;
+}
+
+/* Main title */
+.chat-header h1 {
+    font-size: 24px; /* Slightly smaller for a cleaner look */
+    color: #1e293b;
+    font-weight: 700;
+    margin: 0; /* Remove auto margin to left-align 
+    flex-grow: 1; /* Allows it to take up available space 
+    text-align: left;*/
+}
+
+/* "New Chat" button */
+.chat-header .new-chat-btn {
+    position: absolute; /* Position it on the far right */
+    right: 30px;
+    top: 52%;
+    transform: translateY(-50%);
+    width: 28px; /* Circular button dimensions */
+    height: 28px;
+    border-radius: 36%; /* Make it a perfect circle */
+    background-color: transparent;
+    color: #000000;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    /* box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25); */
+}
+
+.new-chat-btn img {
+  width: 20px;
+  height: 85px;
+  object-fit: contain;
+  margin-bottom: 0px;
+}
+
+.chat-header button:hover {
+    background-color: #cbd5e1; /* Subtle hover color change */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Hamburger menu for mobile */
+.hamburger {
+    display: none; /* Hidden by default on desktop */
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #1e293b;
+    position: absolute; /* Position it on the far left for mobile */
+    left: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Chat Box */
+.chat-box {
+  flex: 1;
+  padding: 12px;
+  /* keep messages clear of header/footer; JS will sync this further */
+  padding-top: 17px;      /* header height */
+  padding-bottom: 120px;  /* minimum input height buffer */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background: #dfe3e7;
+}
+
+/* Message Base */
+.chat-message {
+  max-width: 70%;
+  padding: 5px 16px;
+  border-radius: 14px;
+  line-height: 1.6;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  animation: fadeIn 0.3s ease-in;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  font-size: 1rem;
+}
+
+/* User Message */
+.chat-message.user {
+  align-self: flex-end;
+  background: #345aae;
+  color: white;
+  text-align: left;
+  border-top-right-radius: 0;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 1.13);
+  line-height: 1.4;
+}
+
+/* Bot Message */
+.chat-message.bot {
+  align-self: flex-start;
+  background: #ffffff;
+  color: #1e293b;
+  text-align: left;
+  border-top-left-radius: 0;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 1.13);
+  line-height: 1.4;
+}
+
+/* Bot Markdown Styles */
+.chat-message.bot h1,
+.chat-message.bot h2,
+.chat-message.bot h3 {
+  margin: 10px 0 5px;
+}
+
+.chat-message.bot pre {
+  background: #e2e8f0;
+  color: #0f172a;
+  padding: 12px;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-family: monospace;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Make LLM tables responsive */
+.chat-message.bot table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+.chat-message.bot th,
+.chat-message.bot td {
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+}
+
+/* Input Area */
+.input-area {
+  position: fixed;   /* was sticky: make consistent so it never scrolls */
+  bottom: 0;
+  left: 220px;       /* align with main margin-left */
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+  gap: 10px;
+  z-index: 10;
+}
+
+.input-wrapper {
+  position: relative;
+  overflow: hidden; /* clip focus ring/scrollbar edges to rounded shape */
+  /* width: 730px; */
+}
+
+/* Textarea */
+#user-input {
+  width: 100%;
+  padding: 10px 50px 10px 27px; /* space for send button */
+  border: 1px solid #ccc;
+  border-radius: 45px;
+  resize: none;
+  min-height: 40px;
+  max-height: 150px;
+  overflow-y: auto;            /* allow internal scroll */
+  scrollbar-gutter: stable;    /* avoid layout jump when scrollbar appears */
+  font-size: 16px;
+  line-height: 1.4;
+  box-sizing: border-box;
+  transition: height 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;               /* kill yellow ring */
+  background-clip: padding-box;
+}
+
+/* Custom, subtle focus (replaces the yellow border) */
+#user-input:focus, 
+#user-input:focus-visible {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+}
+
+/* ---- Send Button Container ---- */
+.send-button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0; /* Ensures the button fits the image exactly */
+  border: none;
+  background-color: transparent; /* Makes the button background invisible */
+  cursor: pointer;
+  /* Crucial: Remove all default browser styles on focus and active states */
+  outline: none;
+  box-shadow: none;
+  transition: all 0.2s ease;
+}
+
+/* Ensure all button states (hover, focus, active) are also transparent */
+.send-button:hover,
+.send-button:focus,
+.send-button:active {
+  background-color: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* ---- Image Styling ---- */
+.send-button img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  /* Add a subtle hover effect to the image itself */
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  margin-bottom: 3px;
+}
+
+/* Hover effect on the image */
+.send-button:hover img {
+  opacity: 0.8; /* A subtle fade for the image */
+  transform: scale(1.05); /* Slight scale up for a dynamic feel */
+}
+
+.web-search-btn {
+  background: linear-gradient(45deg, #007BFF, #0056b3); /* matches send-button blue */
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  min-width: 110px;
+  padding-right: 25px; /* room for the cross */
+  margin-left: 15px;
+}
+
+/* When Active (clicked) */
+.web-search-btn.active {
+  background: linear-gradient(45deg, #0056b3, #003f7f);
+  padding-right: 36px; 
+  min-width: 140px;
+}
+
+/* Cancel Cross Styling */
+.cancel-cross {
+  position: absolute;
+  right: 12px;
+  top: 49%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 0.2s ease;
+}
+
+/* Hide cross until active */
+.web-search-btn:not(.active) + .cancel-cross {
+  display: none;
+}
+
+.web-button:hover,
+.send-button:hover {
+  background-color: #0056b3;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    transform: translateX(-100%);
+    width: 80%;
+    z-index: 1001;
+  }
+  .sidebar.active { transform: translateX(0); }
+  .close-sidebar { display: block; }
+  
+  .sidebar h2 {
+      text-align: center;
+  }
+
+  .main {
+    margin-left: 0;
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chat-header {
+    position: fixed;
+    top: 0; left: 0; width: 100%;
+    z-index: 1000;
+    background: white;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .chat-header h1 {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .chat-box {
+    flex: 1;
+    overflow-y: auto;
+    /* replace margin hacks with padding so content never hides */
+    padding: 10px;
+    padding-top: 60px;   /* header height */
+    padding-bottom: 100px; /* input height (JS will keep in sync) */
+  }
+
+  .chat-message {
+    max-width: 98.5%;
+    font-size: 0.95rem;
+  }
+
+  .input-area {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: white;
+    display: flex;
+    flex-direction: column; /* stack textarea & button nicely */
+    align-items: stretch;
+    gap: 8px;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    z-index: 1000;
+  }
+
+  .input-area input {
+    flex: 1;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  /* remove weird negative left shift */
+  .input-area .web-search-btn {
+    margin-left: 0;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    width: auto;
+    min-width: 90px;
+  }
+
+  .hamburger { display: block; }
+
+  .input-wrapper { width: 100%; }
+
+  .sidebar .sidebar-settings li { margin-top: 20px; }
+
+  .web-search-btn {
+    font-size: 12px;
+    padding: 8px 12px;
+    min-width: 90px;
+  }
+  .web-search-btn.active {
+    padding-right: 30px;
+    min-width: 120px;
+  }
+  .cancel-cross {
+    font-size: 12px;
+    right: 8px;
+  }
+}
+
+/* Fade Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

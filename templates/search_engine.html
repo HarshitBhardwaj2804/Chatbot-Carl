@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Search</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style-searchengine.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <button class="close-sidebar">✕</button>
+            <h2>GenAI Chatbot</h2>
+            <ul class="sidebar-menu">
+                <li><button class="nav-btn" onclick="goToPage('/')">New Chat</button></li>
+                <li><button class="nav-btn" onclick="goToPage('/extensions')">Extensions</button></li>
+                <li><button class="nav-btn" onclick="goToPage('/history')">History</button></li>
+            </ul>
+            <ul class="sidebar-settings">
+                <li><button class="nav-btn" onclick="goToPage('/settings')">Settings</button></li>
+            </ul>
+        </div>
+
+        <!-- Main Search Interface -->
+        <div class="main">
+            <div class="chat-header">
+                <button class="hamburger">☰</button>
+                <header>
+                    <h1>CARL AI</h1>
+                </header>
+            </div>
+
+            <div class="searchengine-box">
+                <!-- Google-like search bar -->
+                <div class="search-heading">
+                    <h1>Web Search</h1>
+                </div>
+                <div class="search-bar">
+                    <input type="text" id="search-input" placeholder="Search the web..." />
+                    <button onclick="performSearch()">🔍</button>
+                </div>
+
+                <!-- Results area -->
+                <div id="search-results" class="search-results"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goToPage(route) {
+            window.location.href = route;
+        }
+
+        // Typing animation with Markdown
+        function typeMarkdownText(element, markdownText, delay = 20) {
+            const words = markdownText.split(" ");
+            let current = "";
+
+            function type() {
+                if (words.length > 0) {
+                    current += words.shift() + " ";
+                    element.innerHTML = marked.parse(current);
+                    element.scrollTop = element.scrollHeight; // auto-scroll results
+                    setTimeout(type, delay);
+                }
+            }
+
+            type();
+        }
+
+        async function performSearch() {
+            const query = document.getElementById("search-input").value.trim();
+            if (!query) return;
+
+            const resultsDiv = document.getElementById("search-results");
+            resultsDiv.innerHTML = `<p><em>Searching for "${query}"...</em></p>`;
+
+            try {
+                const res = await fetch("/webSearch", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: query })
+                });
+
+                const data = await res.json();
+
+                // FIX: pass element + reply
+                resultsDiv.innerHTML = "";
+                typeMarkdownText(resultsDiv, data.reply);
+
+            } catch (err) {
+                resultsDiv.innerHTML = "<p>⚠️ Error fetching results.</p>";
+                console.error("Search error:", err);
+            }
+        }
+
+        // Sidebar controls
+        document.querySelector('.hamburger').addEventListener('click', () => {
+            document.querySelector('.sidebar').classList.toggle('active');
+        });
+        document.querySelector('.close-sidebar').addEventListener('click', () => {
+            document.querySelector('.sidebar').classList.remove('active');
+        });
+
+        // Enter key triggers search
+        document.getElementById("search-input").addEventListener("keydown", e => {
+            if (e.key === "Enter") performSearch();
+        });
+    </script>
+</body>
+
+</html>

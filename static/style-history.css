@@ -1,0 +1,551 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Base Styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f1f5f9;
+  height: 100vh;
+  display: flex;
+  transition: background 0.3s, color 0.3s;
+  overflow-x: hidden;
+  /* Prevent horizontal scroll when sidebar is hidden */
+}
+
+.container {
+  display: flex;
+  width: 100%;
+  position: relative;
+  transition: transform 0.3s ease;
+  /* Smooth transition for sidebar toggle */
+}
+
+/* Sidebar */
+.sidebar {
+    width: 225px; /* Slightly wider for better spacing */
+    background-color: #1e293b; /* Dark, professional background */
+    color: #e2e8f0; /* Light text for contrast */
+    padding: 20px;
+    box-shadow: 6px 0 15px rgba(0, 0, 0, 0.1); /* Softer, modern shadow */
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column; /* Use flexbox to manage layout */
+    justify-content: space-between; /* Pushes settings to the bottom */
+    transition: transform 0.3s ease;
+    z-index: 1000;
+}
+
+.sidebar h2 {
+    font-size: 24px;
+    margin-bottom: 40px;
+    text-align: left;
+    color: #f8fafc;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+/* Navigation Lists */
+.sidebar .sidebar-menu,
+.sidebar .sidebar-settings {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Consistent spacing between items */
+}
+
+/* Individual List Item - Container for the button */
+.sidebar .sidebar-menu li,
+.sidebar .sidebar-settings li {
+    background: transparent;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.sidebar .sidebar-menu li:hover,
+.sidebar .sidebar-settings li:hover {
+    background-color: #334155; /* Subtle hover effect */
+}
+
+/* Navigation Button - The actual clickable element */
+.nav-btn {
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: left;
+    padding: 12px 20px;
+    width: 100%;
+    transition: color 0.3s ease;
+    border-radius: 30px; /* Pill shape */
+}
+
+.sidebar .sidebar-settings {
+    margin-top: auto; /* Pushes the settings list to the bottom of the flex container */
+    padding-top: 20px;
+}
+
+/* Close button for mobile sidebar */
+.close-sidebar {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #94a3b8;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+
+/* Main Chat Area */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #f1f5f9;
+  margin-left: 220px;
+  /* Matches sidebar width */
+  transition: margin-left 0.3s ease;
+}
+
+/* Header */
+.chat-header {
+    padding: 15px 30px;
+    background-color: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center everything in the header */
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    position: relative;
+}
+
+/* Main title */
+.chat-header h1 {
+    font-size: 24px; /* Slightly smaller for a cleaner look */
+    color: #1e293b;
+    font-weight: 700;
+    margin: 0; /* Remove auto margin to left-align 
+    flex-grow: 1; /* Allows it to take up available space 
+    text-align: left;*/
+}
+
+/* "New Chat" button */
+.chat-header .new-chat-btn {
+    position: absolute; /* Position it on the far right */
+    right: 30px;
+    top: 52%;
+    transform: translateY(-50%);
+    width: 28px; /* Circular button dimensions */
+    height: 28px;
+    border-radius: 36%; /* Make it a perfect circle */
+    /* background-color: #2563eb; A nice, prominent blue */
+    color: #000000;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    /* box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25); */
+}
+
+.chat-header button:hover {
+    background-color: #cbd5e1; /* Subtle hover color change */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Hamburger menu for mobile */
+.hamburger {
+    display: none; /* Hidden by default on desktop */
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #1e293b;
+    position: absolute; /* Position it on the far left for mobile */
+    left: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Chat History Section */
+.history-section {
+  padding: 20px 30px;
+  overflow-y: auto;
+  background-color: #f4f6f8;
+  flex: 1;
+}
+
+/* History Buttons Container */
+.history-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 16px;
+  box-sizing: border-box;
+  margin: 7px 0 0 0;
+}
+
+.history-button {
+  flex: 1;
+  margin: 0 6px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 12px 0;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-align: center;
+}
+
+.history-button:first-child {
+  margin-left: 0;
+}
+
+.history-button:last-child {
+  margin-right: 0;
+}
+
+.history-button:hover {
+  background-color: #2563eb;
+}
+
+/* History Row */
+.history-row {
+  cursor: pointer;
+  padding: 8px 12px;
+  transition: background-color 0.2s ease;
+}
+
+.history-row:hover {
+  background-color: #f3f4f6;
+}
+
+/* History Details */
+.history-details {
+  padding: 10px 14px;
+  background-color: #f9fafb;
+  font-size: 13px;
+  border-left: 2px solid #3b82f6;
+  margin-top: 6px;
+  border-radius: 4px;
+  display: none;
+  /* Toggled via JS */
+}
+
+/* Last Chat Section */
+.lastchat, .previouschats {
+  margin-bottom: 20px;
+}
+
+#title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #1e293b;
+}
+
+.last-history {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  padding: 16px 20px;
+  margin-top: 8px;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.last-history:hover {
+  background-color: #f0f3f9;
+}
+
+/* History List */
+.history-list {
+  list-style: none;
+}
+
+.history-list li{
+  margin-bottom: 12px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 15px 20px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.history-list li:hover {
+  background-color: #f0f3f9;
+}
+
+.history-topic {
+  font-weight: 600;
+  font-size: 16px;
+  color: #333333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.history-topic .arrow {
+  font-size: 14px;
+  color: #666666;
+  margin-left: 10px;
+  transition: transform 0.3s ease;
+}
+
+.arrow {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: transform 0.3s ease;
+}
+
+.history-date {
+  font-size: 13px;
+  color: #888888;
+  margin-top: 5px;
+}
+
+/* Horizontal button container shown under each history item */
+.button-container {
+  display: none;
+  /* Hidden by default, toggled via JS */
+  margin: 8px 0 0 20px;
+  gap: 10px;
+  padding: 8px 0;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.button-container button,
+.button-container a button {
+  padding: 8px 14px;
+  border: none;
+  background-color: #3b82f6;
+  color: white;
+  border-radius: 5px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button-container button:hover,
+.button-container a button:hover {
+  background-color: #2563eb;
+}
+
+
+/* Expand/Collapse Animation */
+.history-item-expanded .arrow {
+  transform: rotate(180deg);
+}
+
+.history-item-content {
+  display: none;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #444;
+  line-height: 1.5;
+}
+
+.history-item-expanded .history-item-content {
+  display: block;
+}
+
+/* Sections for extensions, archive, etc. */
+.section-title {
+  margin: 30px 0 10px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e1e2f;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 5px;
+}
+
+.archive-item,
+.extension-item {
+  background-color: #fff;
+  border: 1px solid #e1e1e1;
+  border-radius: 8px;
+  padding: 12px 18px;
+  margin: 12px 0;
+  transition: box-shadow 0.3s ease;
+}
+
+.archive-item:hover,
+.extension-item:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.archive-item h4,
+.extension-item h4 {
+  margin-bottom: 6px;
+  font-size: 15px;
+  color: #222;
+}
+
+.archive-item p,
+.extension-item p {
+  font-size: 13px;
+  color: #555;
+  margin: 0;
+}
+
+/* ===========================
+   Mobile Styles
+   =========================== */
+@media (max-width: 768px) {
+
+  /* Base Layout Fixes */
+  body {
+    overflow-x: hidden;
+  }
+  
+  .container {
+    width: 100%;
+    transform: none; /* remove desktop transition */
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 280px; /* Consistent width for mobile sidebar */
+    transform: translateX(-100%); /* hidden by default */
+    position: absolute; /* Changed to absolute for consistent behavior */
+    z-index: 1001; /* Ensure it's on top of everything */
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .sidebar.active {
+    transform: translateX(0); /* shown when toggled */
+  }
+
+  .close-sidebar {
+    display: block; /* show close button on mobile */
+  }
+
+  /* Main Area */
+  .main {
+    margin-left: 0; /* No margin on mobile */
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Hamburger Menu */
+  .hamburger {
+    display: block;
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  /* Header */
+  .chat-header {
+    padding: 15px 20px;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+
+  .chat-header h1 {
+    font-size: 22px;
+    flex-grow: 0;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  /* History Section */
+  .history-section {
+    padding: 15px;
+  }
+
+  /* History Buttons */
+  .history-buttons {
+    flex-direction: row;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .history-button {
+    margin: 0;
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  /* History List */
+  .lastchat {
+    margin-top: 20px;
+  }
+
+  .last-history .button-container,
+  .history-list .button-container {
+    display: none; /* Crucially, hide by default */
+    margin: 8px 0 0 10px;
+    gap: 8px;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+
+  .last-history.expanded .button-container,
+  .history-list li.expanded .button-container {
+    display: flex; /* Display when the JS adds the 'expanded' class */
+  }
+
+  .button-container button,
+  .button-container a button {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 12px;
+    padding: 8px 5px;
+    white-space: nowrap;
+  }
+
+  .history-list li {
+    padding: 12px 15px;
+  }
+
+  .history-topic {
+    font-size: 14px;
+  }
+
+  .history-date {
+    font-size: 12px;
+  }
+}
+
+/* New CSS to handle the expand/collapse state with a class */
+.history-item-expanded .button-container,
+.last-history.expanded .button-container {
+  display: flex;
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Ensure the arrow rotates */
+.history-item-expanded .arrow {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.last-history.expanded .arrow {
+  transform: translateY(-50%) rotate(180deg);
+}

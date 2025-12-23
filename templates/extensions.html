@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CARL Extensions</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style-extension.css') }}" />
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <!--Sidebar-->
+    <div class="sidebar">
+      <button class="close-sidebar">✕</button>
+      <h2>GenAI Chatbot</h2>
+      <ul class="sidebar-menu">
+        <li><button class="nav-btn" onclick="goToPage('/')">New Chat</button></li>
+        <li><button class="nav-btn" onclick="goToPage('/extensions')">Extensions</button></li>
+        <li><button class="nav-btn" onclick="goToPage('/history')">History</button></li>
+      </ul>
+
+      <ul class="sidebar-settings">
+        <li><button class="nav-btn" onclick="goToPage('/settings')">Settings</button></li>
+      </ul>
+    </div>
+
+    <!--Main Interface-->
+    <div class="main">
+      <div class="chat-header">
+        <button class="hamburger">☰</button>
+        <header>
+          <h1>CARL AI</h1>
+        </header>
+      </div>
+      <!--Chat Box-->
+      <div class="chat-box">
+        <div class="main-header">Extensions</div>
+
+        <!--Extension Grid-->
+        <div class="extensions-grid">
+          <a href="/search_engine">
+            <div class="extension-card">
+              <img src="{{ url_for('static', filename='images/tool1.png') }}" alt="Tool 1">
+              <div class="extension-name">Search Engine</div>
+            </div>
+          </a>
+          <a href="/PDF_Chatbot">
+            <div class="extension-card">
+              <img src="{{ url_for('static', filename='images/tool2c.png') }}" alt="Tool 2">
+              <div class="extension-name">PDF ChatBot</div>
+            </div>
+          </a>
+          <!-- <div class="extension-card">
+            <img src="{{ url_for('static', filename='images/tool3.png') }}" alt="Tool 3">
+            <div class="extension-name">Tool 3</div>
+          </div>
+          <div class="extension-card">
+            <img src="{{ url_for('static', filename='images/tool4.png') }}" alt="Tool 4">
+            <div class="extension-name">Tool 4</div>
+          </div>
+          <div class="extension-card">
+            <img src="{{ url_for('static', filename='images/tool5.png') }}" alt="Tool 5">
+            <div class="extension-name">Tool 5</div>
+          </div>
+          <div class="extension-card">
+            <img src="{{ url_for('static', filename='images/tool6.png') }}" alt="Tool 6">
+            <div class="extension-name">Tool 6</div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function goToPage(route) {
+      window.location.href = route;
+    }
+    document.querySelector('.hamburger').addEventListener('click', () => {
+      document.querySelector('.sidebar').classList.toggle('active');
+    });
+
+    document.querySelector('.close-sidebar').addEventListener('click', () => {
+      document.querySelector('.sidebar').classList.remove('active');
+    });
+  </script>
+</body>
+
+</html>

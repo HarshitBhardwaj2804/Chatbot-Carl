@@ -1,0 +1,313 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Base Styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f1f5f9;
+  height: 100vh;
+  display: flex;
+  transition: background 0.3s, color 0.3s;
+  overflow-x: hidden; /* Prevent horizontal scroll when sidebar is hidden */
+}
+
+.container {
+  display: flex;
+  width: 100%;
+  position: relative;
+  transition: transform 0.3s ease; /* Smooth transition for sidebar toggle */
+}
+
+/* Sidebar */
+.sidebar {
+    width: 225px; /* Slightly wider for better spacing */
+    background-color: #1e293b; /* Dark, professional background */
+    color: #e2e8f0; /* Light text for contrast */
+    padding: 20px;
+    box-shadow: 6px 0 15px rgba(0, 0, 0, 0.1); /* Softer, modern shadow */
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column; /* Use flexbox to manage layout */
+    justify-content: space-between; /* Pushes settings to the bottom */
+    transition: transform 0.3s ease;
+    z-index: 1000;
+}
+
+.sidebar h2 {
+    font-size: 24px;
+    margin-bottom: 40px;
+    text-align: left;
+    color: #f8fafc;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+/* Navigation Lists */
+.sidebar .sidebar-menu,
+.sidebar .sidebar-settings {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Consistent spacing between items */
+}
+
+/* Individual List Item - Container for the button */
+.sidebar .sidebar-menu li,
+.sidebar .sidebar-settings li {
+    background: transparent;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.sidebar .sidebar-menu li:hover,
+.sidebar .sidebar-settings li:hover {
+    background-color: #334155; /* Subtle hover effect */
+}
+
+/* Navigation Button - The actual clickable element */
+.nav-btn {
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: left;
+    padding: 12px 20px;
+    width: 100%;
+    transition: color 0.3s ease;
+    border-radius: 30px; /* Pill shape */
+}
+
+.sidebar .sidebar-settings {
+    margin-top: auto; /* Pushes the settings list to the bottom of the flex container */
+    padding-top: 20px;
+}
+
+/* Close button for mobile sidebar */
+.close-sidebar {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #94a3b8;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+
+/* Main Chat Area */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #f1f5f9;
+  margin-left: 220px; /* Matches sidebar width */
+  transition: margin-left 0.3s ease;
+}
+
+/* Header */
+.chat-header {
+    padding: 15px 30px;
+    background-color: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center everything in the header */
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    position: relative;
+}
+
+/* Main title */
+.chat-header h1 {
+    font-size: 24px; /* Slightly smaller for a cleaner look */
+    color: #1e293b;
+    font-weight: 700;
+    margin: 0; /* Remove auto margin to left-align 
+    flex-grow: 1; /* Allows it to take up available space 
+    text-align: left;*/
+}
+
+/* "New Chat" button */
+.chat-header .new-chat-btn {
+    position: absolute; /* Position it on the far right */
+    right: 30px;
+    top: 52%;
+    transform: translateY(-50%);
+    width: 28px; /* Circular button dimensions */
+    height: 28px;
+    border-radius: 36%; /* Make it a perfect circle */
+    /* background-color: #2563eb; A nice, prominent blue */
+    color: #000000;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    /* box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25); */
+}
+
+.chat-header button:hover {
+    background-color: #cbd5e1; /* Subtle hover color change */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Hamburger menu for mobile */
+.hamburger {
+    display: none; /* Hidden by default on desktop */
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #1e293b;
+    position: absolute; /* Position it on the far left for mobile */
+    left: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Main Header */
+.main-header {
+  font-size: 22px;
+  font-weight: 600;
+  color: #1e1e2f;
+  background-color: #f3f3f3;
+  padding: 15px 30px;
+  border-bottom: 2px solid #c2c8d0;
+  border-radius: 8px 8px 0 0;
+  box-shadow: inset 0 -1px 0 #ccc;
+  margin: 0 0 10px 0;
+}
+
+/* Extension Grid */
+.extensions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 30px;
+}
+
+/* Extension Card */
+.extension-card {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 12px 16px;
+  height: 100px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.extension-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.extension-card img {
+  width: 85px;
+  height: 85px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.extension-name {
+  font-size: 19px;
+  font-weight: 600;
+  color: #333;
+  margin: 0px 0px 8px 40px;
+}
+
+.extensions-grid a {
+  color: rgb(37, 35, 35);             /* normal text color */
+  text-decoration: none;    /* no underline by default */
+  cursor: pointer;          /* cursor change for clickability */
+  transition: color 0.2s, text-decoration 0.2s;
+}
+
+.extensions-grid a:visited {
+  color: black;             /* prevent violet visited state */
+}
+
+.extension-grid a:hover {
+  color: #5a1c1c;              /* slightly darker black on hover */
+  font-weight: 500;         /* optional: make it a bit bolder */
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    transform: translateX(-100%); /* Hidden off-screen */
+    width: 80%; /* Reduced width for mobile */
+    z-index: 1001;
+  }
+
+  .sidebar.active {
+    transform: translateX(0); /* Visible when toggled */
+  }
+
+  .close-sidebar {
+    display: block; /* Show close button on mobile */
+  }
+
+  .main {
+    margin-left: 0; /* No margin when sidebar is hidden */
+  }
+
+  .hamburger {
+    display: block; /* Show hamburger menu on mobile */
+  }
+
+  .chat-header h1 {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .main-header {
+    font-size: 18px;
+    padding: 12px 15px;
+  }
+
+  .extensions-grid {
+    grid-template-columns: 1fr; /* Single column on mobile */
+    padding: 15px;
+    gap: 15px;
+  }
+
+  .extension-card {
+    height: 80px;
+    padding: 10px 12px;
+  }
+
+  .extension-card img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .extension-name {
+    font-size: 14px;
+  }
+
+  .sidebar .sidebar-settings li {
+    margin-top: 20px; /* Adjusted for mobile */
+  }
+}

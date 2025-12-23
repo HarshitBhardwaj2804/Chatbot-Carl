@@ -1,0 +1,435 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Base Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f1f5f9;
+    height: 100vh;
+    display: flex;
+    transition: background 0.3s, color 0.3s;
+    overflow-x: hidden;
+    /* Prevent horizontal scroll when sidebar is hidden */
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    position: relative;
+    transition: transform 0.3s ease;
+    /* Smooth transition for sidebar toggle */
+}
+
+/* Sidebar */
+.sidebar {
+    width: 225px; /* Slightly wider for better spacing */
+    background-color: #1e293b; /* Dark, professional background */
+    color: #e2e8f0; /* Light text for contrast */
+    padding: 20px;
+    box-shadow: 6px 0 15px rgba(0, 0, 0, 0.1); /* Softer, modern shadow */
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column; /* Use flexbox to manage layout */
+    justify-content: space-between; /* Pushes settings to the bottom */
+    transition: transform 0.3s ease;
+    z-index: 1000;
+}
+
+.sidebar h2 {
+    font-size: 24px;
+    margin-bottom: 40px;
+    text-align: left;
+    color: #f8fafc;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+/* Navigation Lists */
+.sidebar .sidebar-menu,
+.sidebar .sidebar-settings {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Consistent spacing between items */
+}
+
+/* Individual List Item - Container for the button */
+.sidebar .sidebar-menu li,
+.sidebar .sidebar-settings li {
+    background: transparent;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.sidebar .sidebar-menu li:hover,
+.sidebar .sidebar-settings li:hover {
+    background-color: #334155; /* Subtle hover effect */
+}
+
+/* Navigation Button - The actual clickable element */
+.nav-btn {
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: left;
+    padding: 12px 20px;
+    width: 100%;
+    transition: color 0.3s ease;
+    border-radius: 30px; /* Pill shape */
+}
+
+.sidebar .sidebar-settings {
+    margin-top: auto; /* Pushes the settings list to the bottom of the flex container */
+    padding-top: 20px;
+}
+
+/* Close button for mobile sidebar */
+.close-sidebar {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #94a3b8;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+
+/* Main Chat Area */
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #f1f5f9;
+    margin-left: 220px;
+    /* Matches sidebar width */
+    transition: margin-left 0.3s ease;
+}
+
+/* Header */
+.chat-header {
+    padding: 15px 30px;
+    background-color: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center everything in the header */
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    position: relative;
+}
+
+/* Main title */
+.chat-header h1 {
+    font-size: 24px; /* Slightly smaller for a cleaner look */
+    color: #1e293b;
+    font-weight: 700;
+    margin: 0; /* Remove auto margin to left-align 
+    flex-grow: 1; /* Allows it to take up available space 
+    text-align: left;*/
+}
+
+/* "New Chat" button */
+.chat-header .new-chat-btn {
+    position: absolute; /* Position it on the far right */
+    right: 30px;
+    top: 52%;
+    transform: translateY(-50%);
+    width: 28px; /* Circular button dimensions */
+    height: 28px;
+    border-radius: 36%; /* Make it a perfect circle */
+    /* background-color: #2563eb; A nice, prominent blue */
+    color: #000000;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    /* box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25); */
+}
+
+.chat-header button:hover {
+    background-color: #cbd5e1; /* Subtle hover color change */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Hamburger menu for mobile */
+.hamburger {
+    display: none; /* Hidden by default on desktop */
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #1e293b;
+    position: absolute; /* Position it on the far left for mobile */
+    left: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Chat Box */
+.chat-box {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: #dfe3e7;
+}
+
+.chat-container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    background: #f8fbff;
+}
+
+/* Main chat section */
+.chat-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #ddd;
+}
+
+.chat-pdftitle {
+    text-align: left;
+    font-weight: bold;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    background: #f0f4f9;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    margin: 8px 0;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 70%;
+}
+
+.user {
+    background: #d1e7ff;
+    align-self: flex-end;
+    text-align: left;
+    border-top-right-radius: 0;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 1.13);
+}
+
+.bot {
+    background: #e9ecef;
+    align-self: flex-start;
+    text-align: left;
+    border-top-right-radius: 0;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 1.13);
+}
+
+.chat-input {
+    display: flex;
+    border-top: 1px solid #ccc;
+    padding: 8px;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #bbb;
+    border-radius: 8px;
+    margin-right: 8px;
+}
+
+.chat-input button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    background: #4a90e2;
+    color: white;
+    cursor: pointer;
+}
+
+/* PDF Sidebar */
+.pdf-sidebar {
+    width: 260px;
+    background: #f4f6f9;
+    border-left: 1px solid #ddd;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.pdf-sidebar button {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background 0.2s;
+}
+
+.pdf-sidebar button:hover {
+    background: #e0e7ff;
+}
+
+.pdf-history {
+    margin-top: 15px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.pdf-history ul {
+    list-style: none;
+    padding: 0;
+}
+
+.pdf-history li {
+    padding: 8px;
+    margin-bottom: 5px;
+    background: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.pdf-history li:hover {
+    background: #dbeafe;
+}
+
+/* ===========================
+   Mobile Styles
+   =========================== */
+@media (max-width: 768px) {
+
+    /* Base Layout Fixes */
+    body {
+        overflow-x: hidden;
+    }
+
+    .container {
+        width: 100%;
+        transform: none; /* remove any unwanted transforms */
+    }
+
+    /* Sidebar */
+    .sidebar {
+        width: 280px; /* Use a consistent width */
+        transform: translateX(-100%); /* Keeps it off-screen by default */
+        position: absolute; /* Change to absolute for consistent behavior */
+        z-index: 1001; /* Ensure it's on top of everything */
+        box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .sidebar.active {
+        transform: translateX(0); /* Slides into view */
+    }
+
+    .close-sidebar {
+        display: block; /* Show the close button */
+    }
+
+    /* Main Area */
+    .main {
+        margin-left: 0; /* No margin on mobile */
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Hamburger Menu */
+    .hamburger {
+        display: block;
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    /* Header */
+    .chat-header {
+        padding: 15px 20px;
+        justify-content: center;
+        position: relative;
+    }
+    
+    .chat-header h1 {
+        font-size: 22px;
+        flex-grow: 0;
+        text-align: center;
+        margin: 0 auto;
+    }
+
+    /* Chat Box */
+    .chat-box {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .message {
+        max-width: 98%;
+        font-size: 0.9rem;
+    }
+
+    /* Chat Input */
+    .chat-input {
+        flex-direction: row;
+        padding: 6px;
+    }
+
+    .chat-input input {
+        font-size: 0.9rem;
+        padding: 6px;
+        margin-right: 6px;
+    }
+
+    .chat-input button {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+    }
+
+    /* PDF Sidebar hidden on mobile */
+    .pdf-sidebar {
+        display: none;
+    }
+
+    /* Button Container (if applicable) */
+    .button-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        gap: 6px;
+        margin: 10px;
+    }
+
+    .button-container button {
+        flex: 1 1 auto;
+        min-width: 0;
+        font-size: 0.8rem;
+        padding: 6px;
+    }
+}

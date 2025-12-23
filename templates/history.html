@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CARL History</title>
+  <link rel="stylesheet" href="static/style-history.css" />
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <button class="close-sidebar">✕</button>
+      <h2>GenAI Chatbot</h2>
+      <ul class="sidebar-menu">
+        <li><button class="nav-btn" onclick="goToPage('/')">New Chat</button></li>
+        <li><button class="nav-btn" onclick="goToPage('/extensions')">Extensions</button></li>
+        <li><button class="nav-btn" onclick="goToPage('/history')">History</button></li>
+      </ul>
+
+      <ul class="sidebar-settings">
+        <li><button class="nav-btn" onclick="goToPage('/settings')">Settings</button></li>
+      </ul>
+    </div>
+
+    <!-- Main History Interface -->
+    <div class="main">
+      <div class="chat-header">
+        <button class="hamburger">☰</button>
+        <header>
+          <h1>CARL AI</h1>
+          <!-- <button id="toggle-dark">Dark Mode</button> -->
+        </header>
+      </div>
+
+      <div class="history-buttons">
+        <button class="history-button" onclick="toggleSection('chat')">Chat History</button>
+        <button class="history-button" onclick="toggleSection('extensions')">Extension's History</button>
+        <button class="history-button" onclick="toggleSection('archive')">Saved</button>
+      </div>
+
+      <!-- Chat History Section -->
+      <div id="chat" class="history-section">
+        <div class="lastchat">
+          <p id="title">Last Chat</p>
+          {% if last_session %}
+          <div class="last-history">
+            <div class="history-row" onclick="toggleItem(this)">
+              <div>
+                <div class="history-topic">{{ last_session.chat_name }}</div>
+                <div class="history-date">{{ last_session.datetime }}</div>
+              </div>
+              <span class="arrow">▼</span>
+            </div>
+
+            <div class="history-details">
+              <p>{{ last_session.first_message }}</p>
+              <p><strong>Session_ID : </strong>{{ last_session.session_id }}</p>
+            </div>
+
+            <div class="button-container">
+              <a href="/load_chat/{{last_session.session_id}}"><button>Load Chat</button></a>
+              <button onclick="deleteChat('{{last_session.session_id}}')">Delete Chat</button>
+              <button>Save Chat</button>
+            </div>
+            {% else %}
+            <p>No recent chat available.</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="previouschats">
+          <p id="title">Previous Chats</p>
+          <!-- <div id="chat" class="history-section"> -->
+          <ul class="history-list">
+            {% for session in sessions %}
+            <li>
+              <div class="history-row" onclick="toggleItem(this)">
+                <div>
+                  <div class="history-topic">{{ session.chat_name }}</div>
+                  <div class="history-date">{{ session.datetime }}</div>
+                </div>
+                <span class="arrow">▼</span>
+              </div>
+
+              <div class="history-details" style="display: none;">
+                <p> {{ session.first_message }}</p>
+                <p><strong>Session_ID : </strong>{{ session.session_id }}</p>
+              </div>
+
+              <div class="button-container" style="display: none;">
+                <a href="/load_chat/{{session.session_id}}"><button>Load Chat</button></a>
+                <button onclick="deleteChat('{{session.session_id}}')">Delete Chat</button>
+                <button>Save Chat</button>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+          <!-- </div> -->
+        </div>
+      </div>
+
+      <!-- Extensions History Section -->
+      <div id="extensions" class="history-section" style="display: none;">
+        <ul class="history-list">
+          <li>
+            <div class="history-row" onclick="toggleItem(this)">
+              <div>
+                <div class="history-topic">LangChain Extension Install</div>
+                <div class="history-date">July 20, 2025</div>
+              </div>
+              <span class="arrow">▼</span>
+            </div>
+            <div class="history-details" style="display: none;">Walkthrough of installing LangChain as a browser
+              extension and testing basic features.</div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Archive Section -->
+      <div id="archive" class="history-section" style="display: none;">
+        <ul class="history-list">
+          <li>
+            <div class="history-row" onclick="toggleItem(this)">
+              <div>
+                <div class="history-topic">Save Chat: Data Preprocessing</div>
+                <div class="history-date">June 18, 2025</div>
+              </div>
+              <span class="arrow">▼</span>
+            </div>
+            <div class="history-details" style="display: none;">Covers data cleaning, normalization, and encoding
+              methods used in typical ML workflows.</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // function for selecting chat-history extension history and archive.
+    function toggleSection(sectionId) {
+      const sections = document.querySelectorAll('.history-section');
+      sections.forEach(section => section.style.display = 'none');
+      document.getElementById(sectionId).style.display = 'block';
+    }
+
+    // function to open the history row.
+    function toggleItem(row) {
+      const details = row.nextElementSibling;
+      const buttonContainer = details.nextElementSibling;
+      const arrow = row.querySelector('.arrow');
+
+      const isOpen = details.style.display === 'block';
+
+      details.style.display = isOpen ? 'none' : 'block';
+      buttonContainer.style.display = isOpen ? 'none' : 'flex';
+      arrow.textContent = isOpen ? '▼' : '▲';
+    }
+
+    // Sidebar function to move to other pages
+    function goToPage(route) {
+      window.location.href = route;
+    }
+
+    //Sidebar function to open   
+    document.querySelector('.hamburger').addEventListener('click', () => {
+      document.querySelector('.sidebar').classList.toggle('active');
+    });
+    //Sidebar function to close
+    document.querySelector('.close-sidebar').addEventListener('click', () => {
+      document.querySelector('.sidebar').classList.remove('active');
+    });
+
+    async function deleteChat(sessionId) {
+      const confirmDelete = confirm("Do you permanently want to delete this chat?");
+      if (!confirmDelete) return;
+
+      try {
+        const res = await fetch(`/delete_chat/${sessionId}`, { method: "DELETE" });
+        const data = await res.json();
+
+        if (data.success) {
+          alert("Chat deleted successfully!");
+          // Option 1: Reload the page to refresh list
+          location.reload();
+          // Option 2 (better): Remove the chat div from DOM directly
+          // document.getElementById(`chat-${sessionId}`).remove();
+        } else {
+          alert("Failed to delete chat: " + data.error);
+        }
+      } catch (err) {
+        console.error("Error deleting chat:", err);
+        alert("Something went wrong while deleting.");
+      }
+    }
+  </script>
+</body>
+
+</html>

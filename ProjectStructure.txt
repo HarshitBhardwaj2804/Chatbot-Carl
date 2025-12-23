@@ -1,0 +1,30 @@
+MainProject
+|-extensions/
+    |-_pycache_/
+    |-search_engine.py
+    |-text-to-image.py
+|-src/
+    |-_pycache_/
+    |-__init__.py
+    |-exception.py
+    |-logger.py
+    |-utils.py
+|-static/
+    |-images/
+    |-style-extensions.css 
+    |-style-history.css
+    |-style-pdfchatbot.css
+    |-style-searchengine.css
+    |-style-settings.css
+    |-style.css
+|-templates/
+    |-extension.html
+    |-history.html
+    |-index.html
+    |-pdf_chatbot.html
+    |-search_engnie.html
+    |-settings.html
+|-chat_sessions_test.json
+|-main.py
+|-ProjectStructure.txt
+|-setup.py

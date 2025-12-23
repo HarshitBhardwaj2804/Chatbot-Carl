@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style-settings.css') }}" />
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <button class="close-sidebar">✕</button>
+            <h2>GenAI Chatbot</h2>
+            <ul class="sidebar-menu">
+                <li><button class="nav-btn" onclick="goToPage('/')">New Chat</button></li>
+                <li><button class="nav-btn" onclick="goToPage('/extensions')">Extensions</button></li>
+                <li><button class="nav-btn" onclick="goToPage('/history')">History</button></li>
+            </ul>
+            <ul class="sidebar-settings">
+                <li><button class="nav-btn" onclick="goToPage('/settings')">Settings</button></li>
+            </ul>
+        </div>
+        <div class="main">
+            <div class="chat-header">
+                <button class="hamburger">☰</button>
+                <header>
+                    <h1>CARL AI</h1>
+                </header>
+            </div>
+            <div class="settings-box" id="settings-box">
+                <div class="settings-container">
+                    <h2 class="settings-title">Settings</h2>
+                    <div class="settings-grid">
+                        <div class="settings-card">
+                            <h3 class="card-title">Model & Performance</h3>
+                            <div class="form-group">
+                                <label for="model-select">Choose Model</label>
+                                <select id="model-select" class="model-select">
+                                    <option value="openai/gpt-oss-120b" selected>openai/gpt-oss-120b</option>
+                                    <option value="openai/gpt-oss-20b">openai/gpt-oss-20b</option>
+                                    <option value="llama-3.3-70b-versatile">llama-3.3-70b-versatile</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="temperature-range">Temperature</label>
+                                <input type="range" id="temperature-range" class="temperature-range" min="0" max="1"
+                                    step="0.1" value="0.7">
+                                <span class="range-value">0.7</span>
+                            </div>
+                        </div>
+
+                        <div class="settings-card custom-instructions-card">
+                            <h3 class="card-title">Custom Instructions</h3>
+                            <textarea class="instructions-textarea"
+                                placeholder="e.g., You are a helpful assistant..."></textarea>
+                            <div class="instructions-actions">
+                                <button class="clear-btn">Clear Instructions</button>
+                            </div>
+                        </div>
+
+                        <div class="settings-card appearance-card">
+                            <h3 class="card-title">Appearance</h3>
+                            <div class="form-group">
+                                <label for="dark-mode-toggle" class="toggle-label">Dark Mode</label>
+                                <label class="switch">
+                                    <input type="checkbox" id="dark-mode-toggle">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="font-size-select">Chat Font Size</label>
+                                <select id="font-size-select" class="font-size-select">
+                                    <option value="small">Small</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="large">Large</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="actions">
+                    <button class="save-btn">Save settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goToPage(route) {
+            window.location.href = route;
+        }
+        // In settings.html, inside the <script> tag:
+
+        const modelSelect = document.getElementById("model-select");
+        const temperatureRange = document.getElementById("temperature-range");
+        const instructionsTextarea = document.querySelector(".instructions-textarea");
+        const darkModeToggle = document.getElementById("dark-mode-toggle");
+        const saveBtn = document.querySelector(".save-btn");
+        const clearBtn = document.querySelector(".clear-btn");
+        const rangeValueSpan = document.querySelector('.range-value');
+
+        // Function to load settings from the server
+        async function loadSettings() {
+            try {
+                const res = await fetch("/get_settings");
+                if (!res.ok) throw new Error("Failed to load settings");
+                const settings = await res.json();
+
+                modelSelect.value = settings.model || "openai/gpt-oss-120b";
+                temperatureRange.value = settings.temperature || 0.7;
+                instructionsTextarea.value = settings.instructions || "";
+                darkModeToggle.checked = settings.darkMode || false;
+                // Update the displayed temperature value
+                rangeValueSpan.textContent = temperatureRange.value;
+            } catch (error) {
+                console.error("Error loading settings:", error);
+            }
+        }
+
+        // Function to save settings to the server
+        async function saveSettings() {
+            const settings = {
+                model: modelSelect.value,
+                temperature: parseFloat(temperatureRange.value),
+                instructions: instructionsTextarea.value.trim(),
+                darkMode: darkModeToggle.checked
+            };
+
+            try {
+                const res = await fetch("/save_settings", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(settings)
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert("Settings saved successfully!"); // Simple feedback
+                } else {
+                    alert("Failed to save settings.");
+                }
+            } catch (error) {
+                console.error("Error saving settings:", error);
+            }
+        }
+
+        // Attach event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSettings(); // Load settings when page loads
+            saveBtn.addEventListener('click', saveSettings);
+            clearBtn.addEventListener('click', () => {
+                instructionsTextarea.value = "";
+                // You might also want to call saveSettings() here to clear it on the server
+            });
+            // Existing event listeners for sidebar and temperature
+            // Hamburger menu
+            document.querySelector('.hamburger').addEventListener('click', () => {
+                document.querySelector('.sidebar').classList.toggle('active');
+            });
+
+            // Close sidebar when clicking close button
+            document.querySelector('.close-sidebar').addEventListener('click', () => {
+                document.querySelector('.sidebar').classList.remove('active');
+            });
+
+            // Update range value display
+            const temperatureRange = document.getElementById('temperature-range');
+            const rangeValueSpan = document.querySelector('.range-value');
+            if (temperatureRange && rangeValueSpan) {
+                temperatureRange.addEventListener('input', (e) => {
+                    rangeValueSpan.textContent = e.target.value;
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
